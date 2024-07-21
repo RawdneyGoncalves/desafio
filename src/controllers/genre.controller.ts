@@ -7,7 +7,7 @@ export class GenreController {
             const genres = await GenreService.getAll(req.query.page, req.query.limit);
             reply.status(200).send(genres);
         } catch (error) {
-            reply.status(400).send({ message: error.message });
+            reply.status(400).send({ message: error });
         }
     }
 }

@@ -7,7 +7,7 @@ export class MovieController {
       const movies = await MovieService.getMovies(req.user, req.query.page, req.query.limit, req.query.genre);
       reply.status(200).send(movies);
     } catch (error) {
-      reply.status(400).send({ message: error.message });
+      reply.status(400).send({ message: error });
     }
   }
 }

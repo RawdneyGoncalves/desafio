@@ -12,6 +12,9 @@ const MovieSchema = new mongoose.Schema({
 const Movie = mongoose.model('Movie', MovieSchema);
 
 export class MovieService {
+  static fetchMoviesByTheme(themeIds: any) {
+    throw new Error('Method not implemented.');
+  }
   static async getMovies(user: any, page: number = 1, limit: number = 10, genre: number | null = null) {
     const userPackages = await UserService.getUserPackages(user.id);
     const allowedGenres = userPackages.flatMap((pkg: any) => pkg.themes);

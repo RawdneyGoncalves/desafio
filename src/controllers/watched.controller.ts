@@ -7,7 +7,7 @@ export class WatchedController {
             const watched = await WatchedService.markWatched(req.user, req.body.movieId);
             reply.status(200).send(watched);
         } catch (error) {
-            reply.status(400).send({ message: error.message });
+            reply.status(400).send({ message: error });
         }
     }
 
@@ -16,7 +16,7 @@ export class WatchedController {
             const watched = await WatchedService.unmarkWatched(req.user, req.body.movieId);
             reply.status(200).send(watched);
         } catch (error) {
-            reply.status(400).send({ message: error.message });
+            reply.status(400).send({ message: error });
         }
     }
 
@@ -25,7 +25,7 @@ export class WatchedController {
             const report = await WatchedService.getWatchedReport(req.user);
             reply.status(200).send(report);
         } catch (error) {
-            reply.status(400).send({ message: error.message });
+            reply.status(400).send({ message: error });
         }
     }
 }

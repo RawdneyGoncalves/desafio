@@ -7,7 +7,7 @@ export class PackageController {
       const packageData = await PackageService.create(req.body);
       reply.status(201).send(packageData);
     } catch (error) {
-      reply.status(400).send({ message: error.message });
+      reply.status(400).send({ message: error });
     }
   }
 
@@ -16,7 +16,7 @@ export class PackageController {
       const packages = await PackageService.getAll();
       reply.status(200).send(packages);
     } catch (error) {
-      reply.status(400).send({ message: error.message });
+      reply.status(400).send({ message: error });
     }
   }
 

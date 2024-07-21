@@ -7,7 +7,7 @@ export class ThemeController {
       const theme = await ThemeService.create(req.body);
       reply.status(201).send(theme);
     } catch (error) {
-      reply.status(400).send({ message: error.message });
+      reply.status(400).send({ message: error });
     }
   }
 
@@ -16,7 +16,7 @@ export class ThemeController {
       const themes = await ThemeService.getAll();
       reply.status(200).send(themes);
     } catch (error) {
-      reply.status(400).send({ message: error.message });
+      reply.status(400).send({ message: error });
     }
   }
 

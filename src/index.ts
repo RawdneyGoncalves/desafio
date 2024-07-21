@@ -14,12 +14,14 @@ app.register(require('fastify-jwt'), {
   secret: process.env.JWT_SECRET,
 });
 
-app.decorate('authenticate', async (request, reply) => {
-  try {
-    await request.jwtVerify();
-  } catch (err) {
-    reply.send(err);
-  }
+app.decorate('authenticate', function () {
+  return async function (request, reply) {
+    try {
+      await request.jwtVerify();
+    } catch (err) {
+      reply.send(err);
+    }
+  };
 });
 
 app.register(userRoutes, { prefix: '/api/users' });

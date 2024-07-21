@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
-import { User } from '../entities/user.entity';
-import { Package } from '../entities/package.entity';
-import { Theme } from '../entities/theme.entity';
-import { Movie } from '../entities/movie.entity';
+import { User } from '@entities/user.entity';
+import { Package } from '@entities/package.entity';
+import { Theme } from '@entities/theme.entity';
+import { Movie } from '@entities/movie.entity';
 
 const AppDataSource = new DataSource({
   type: 'mysql',

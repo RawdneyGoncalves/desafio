@@ -1,19 +1,46 @@
 import db from '../config/database';
 
 export class ThemeService {
-  static getAllThemes() {
+  static fetchAndUpdateThemes() {
     throw new Error('Method not implemented.');
   }
+  static async getAllThemes() {
+    try {
+      const themes = await db('themes').select('*');
+      return themes
+    } catch (error) {
+      console.error('Error fetching themes:', error);
+      throw error
+    }
+  }
+
   static async create(themeData: { name: string; description: string }) {
-    const [theme] = await db('themes').insert(themeData).returning('*');
-    return theme;
+    try {
+      const [theme] = await db('themes').insert(themeData).returning('*');
+      return theme;
+    } catch (error) {
+      console.error('Error creating theme:', error);
+      throw error;
+    }
   }
 
   static async getAll() {
-    return db('themes').select('*');
+    try {
+      const themes = await db('themes').select('*');
+      return themes;
+    } catch (error) {
+      console.error('Error fetching themes:', error);
+      throw error;
+    }
   }
 
   static async getById(id: number) {
-    return db('themes').where({ id }).first();
+    try {
+      const theme = await db('themes').where({ id }).first();
+      return theme;
+    } catch (error) {
+      console.error(`Error fetching theme with id ${id}:`, error);
+      throw error;
+    }
   }
 }

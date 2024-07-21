@@ -10,7 +10,7 @@ const Watched = mongoose.model('Watched', WatchedSchema);
 
 export class WatchedService {
     static async markWatched(user: any, movieId: number) {
-        const movie = await MovieService.getMovieById(movieId);
+        const movie: any = await MovieService.getMovieById(movieId);
         if (!movie) {
             throw new Error('Movie not found');
         }

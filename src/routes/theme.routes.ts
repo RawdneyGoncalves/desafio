@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { FastifyInstance } from 'fastify';
 import { ThemeController } from '../controllers/theme.controller';
 
-const router = Router();
-
-router.get('/', ThemeController.getAllThemes);
-
-export default router;
+export default async function themeRoutes(fastify: FastifyInstance) {
+    fastify.post('/', ThemeController.create);
+    fastify.get('/', ThemeController.getAll);
+    fastify.get('/:id', ThemeController.getById);
+}

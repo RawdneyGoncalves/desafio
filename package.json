@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node -r module-alias/register src/index.js",
+    "dev": "ts-node-dev -r tsconfig-paths/register -r module-alias/register src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,15 +16,19 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "eslint": "^9.7.0",
     "express": "^4.19.2",
+    "fastify": "^4.28.1",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
     "module-alias": "^2.2.3",
     "mongoose": "^8.5.1",
     "mysql2": "^3.10.3",
     "npm": "^10.8.2",
     "reflect-metadata": "^0.2.2",
+    "tsconfig-paths": "^4.2.0",
     "typeorm": "^0.3.20",
     "winston": "^3.13.1"
   },
@@ -41,10 +46,11 @@
     "typescript": "^5.5.3"
   },
   "_moduleAliases": {
-    "@modules": "dist/modules",
-    "@config": "dist/config",
-    "@entities": "dist/entities",
-    "@services": "dist/services",
-    "@utils": "dist/utils"
+    "@controllers": "src/controllers",
+    "@routes": "src/routes",
+    "@services": "src/services",
+    "@config": "src/config",
+    "@entities": "src/entities",
+    "@schedulers": "src/schedulers"
   }
 }

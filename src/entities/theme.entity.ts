@@ -1,10 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Knex } from 'knex';
 
-@Entity()
-export class Theme {
-  @PrimaryGeneratedColumn()
-  id: number;
+export async function up(knex: Knex): Promise<void> {
+  await knex.schema.createTable('themes', (table) => {
+    table.increments('id').primary();
+    table.string('name').notNullable();
+    table.string('description').notNullable();
+  });
+}
 
-  @Column()
-  name: string;
+export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTable('themes');
 }

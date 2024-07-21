@@ -1,17 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import { User } from './user.entity';
+import { Knex } from 'knex';
 
-@Entity()
-export class Movie {
-  @PrimaryGeneratedColumn()
-  id: number;
+export async function up(knex: Knex): Promise<void> {
+  await knex.schema.createTable('movies', (table) => {
+    table.increments('id').primary();
+    table.string('title').notNullable();
+    table.string('description').notNullable();
+    table.date('releaseDate').notNullable();
+  });
+}
 
-  @Column()
-  title: string;
-
-  @Column('json')
-  details: object;
-
-  @ManyToMany(() => User, user => user.movies)
-  users: User[];
+export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTable('movies');
 }

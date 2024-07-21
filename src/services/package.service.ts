@@ -1,20 +1,16 @@
-import { AppDataSource } from '../config/database';
-import { Package } from '../entities/package.entity';
-
-const packageRepository = AppDataSource.getRepository(Package);
+import db from '@config/database';
 
 export class PackageService {
-  static async create(packageData: Partial<Package>) {
-    const packageEntity = packageRepository.create(packageData);
-    await packageRepository.save(packageEntity);
-    return packageEntity;
+  static async create(packageData: { name: string; themes: string[]; version: string }) {
+    const [packageRecord] = await db('packages').insert(packageData).returning('*');
+    return packageRecord;
   }
 
-  static async findAll() {
-    return await packageRepository.find({ relations: ['themes'] });
+  static async getAll() {
+    return db('packages').select('*');
   }
 
-  static async findById(id: number) {
-    return await packageRepository.findOne({ where: { id }, relations: ['themes'] });
+  static async getById(id: number) {
+    return db('packages').where({ id }).first();
   }
 }

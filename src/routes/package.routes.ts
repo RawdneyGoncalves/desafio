@@ -1,10 +1,8 @@
-import { Router } from 'express';
-import { PackageController } from '../controllers/package.controller';
+import { FastifyInstance } from 'fastify';
+import { PackageController } from '@controllers/package.controller';
 
-const router = Router();
-
-router.post('/', PackageController.create);
-router.get('/', PackageController.list);
-router.get('/:id', PackageController.get);
-
-export default router;
+export default async function packageRoutes(fastify: FastifyInstance) {
+    fastify.post('/', PackageController.create);
+    fastify.get('/', PackageController.getAll);
+    fastify.get('/:id', PackageController.getById);
+}

@@ -1,36 +1,37 @@
-import { AppDataSource } from '../config/database';
-import { Movie } from '../entities/movie.entity';
 import axios from 'axios';
+import mongoose from 'mongoose';
+import { UserService } from '@services/user.service';
 
-const movieRepository = AppDataSource.getRepository(Movie);
+const MovieSchema = new mongoose.Schema({
+  id: Number,
+  title: String,
+  genre_ids: [Number],
+  release_date: String,
+}, { timestamps: true });
+
+const Movie = mongoose.model('Movie', MovieSchema);
 
 export class MovieService {
-  static async fetchMoviesByTheme(themeIds: number[]) {
-    try {
-      const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=${themeIds.join(',')}`);
-      const movies = response.data.results.map((movie: any) => movieRepository.create({
-        id: movie.id,
-        title: movie.title,
-        details: movie,
-      }));
-      await movieRepository.save(movies);
-      return movies;
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-      throw new Error('Unable to fetch movies');
+  static async getMovies(user: any, page: number = 1, limit: number = 10, genre: number | null = null) {
+    const userPackages = await UserService.getUserPackages(user.id);
+    const allowedGenres = userPackages.flatMap((pkg: any) => pkg.themes);
+
+    let query = { genre_ids: { $in: allowedGenres } };
+    if (genre) {
+      query = { ...query, genre_ids: genre };
     }
+
+    return Movie.find(query).skip((page - 1) * limit).limit(limit);
   }
 
-  static async getMoviesByUserTheme(userId: number) {
-    const userPackages = await AppDataSource.getRepository(Package).find({
-      relations: ['themes'],
-      where: { users: { id: userId } },
+  static async updateMovies() {
+    const response = await axios.get('https://api.themoviedb.org/3/movie/popular', {
+      params: {
+        api_key: process.env.TMDB_API_KEY,
+      },
     });
-
-    const themeIds = userPackages.flatMap(pkg => pkg.themes.map(theme => theme.id));
-    const movies = await movieRepository.find({
-      where: { details: { genres: { id: In(themeIds) } } },
-    });
-    return movies;
+    const movies = response.data.results;
+    await Movie.deleteMany({});
+    await Movie.insertMany(movies);
   }
 }

@@ -1,10 +1,9 @@
-import { Router } from 'express';
-import { UserController } from '../controllers/user.controller';
+import { FastifyInstance } from 'fastify';
+import { UserController } from '@controllers/user.controller';
 
-const router = Router();
-
-router.post('/register', UserController.register);
-router.post('/login', UserController.login);
-router.post('/reset-password', UserController.resetPassword);
-
-export default router;
+export default async function userRoutes(fastify: FastifyInstance) {
+    fastify.post('/register', UserController.register);
+    fastify.post('/login', UserController.login);
+    fastify.post('/reset-password', UserController.resetPassword);
+    fastify.post('/update-password', UserController.updatePassword);
+}

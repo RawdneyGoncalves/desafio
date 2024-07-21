@@ -1,32 +1,31 @@
-import { Request, Response } from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { PackageService } from '@services/package.service';
 
 export class PackageController {
-  static async create(req: Request, res: Response) {
+  static async create(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const pkg = await PackageService.create(req.body);
-      res.status(201).json(pkg);
+      const packageData = await PackageService.create(req.body);
+      reply.status(201).send(packageData);
     } catch (error) {
-      res.status(400).json({ message: error });
+      reply.status(400).send({ message: error.message });
     }
   }
 
-  static async list(req: Request, res: Response) {
+  static async getAll(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const packages = await PackageService.findAll();
-      res.status(200).json(packages);
+      const packages = await PackageService.getAll();
+      reply.status(200).send(packages);
     } catch (error) {
-      res.status(400).json({ message: error });
+      reply.status(400).send({ message: error.message });
     }
   }
 
-  static async get(req: Request, res: Response) {
+  static async getById(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const pkg = await PackageService.findById(parseInt(req.params.id));
-      if (!pkg) return res.status(404).json({ message: 'Package not found' });
-      res.status(200).json(pkg);
+      const packageData = await PackageService.getById(req.params.id);
+      reply.status(200).send(packageData);
     } catch (error) {
-      res.status(400).json({ message: error });
+      reply.status(404).send({ message: 'Package not found' });
     }
   }
 }

@@ -1,33 +1,40 @@
-import { Request, Response } from 'express';
-import { AuthService } from '@services/auth.service';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { UserService } from '@services/user.service';
 
 export class UserController {
-  static async register(req: Request, res: Response) {
+  static async register(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const user = await AuthService.register(req.body);
-      res.status(201).json(user);
+      const user = await UserService.register(req.body);
+      reply.status(201).send(user);
     } catch (error) {
-      res.status(400).json({ message: error });
+      reply.status(400).send({ message: error });
     }
   }
 
-  static async login(req: Request, res: Response) {
+  static async login(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const { username, password } = req.body;
-      const token = await AuthService.login(username, password);
-      res.status(200).json(token);
+      const token = await UserService.login(req.body);
+      reply.status(200).send({ token });
     } catch (error) {
-      res.status(400).json({ message: error });
+      reply.status(400).send({ message: error });
     }
   }
 
-  static async resetPassword(req: Request, res: Response) {
+  static async resetPassword(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const { email, newPassword } = req.body;
-      const user = await AuthService.resetPassword(email, newPassword);
-      res.status(200).json(user);
+      await UserService.resetPassword(req.body);
+      reply.status(200).send({ message: 'Password reset link sent' });
     } catch (error) {
-      res.status(400).json({ message: error });
+      reply.status(400).send({ message: error });
+    }
+  }
+
+  static async updatePassword(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      await UserService.updatePassword(req.body);
+      reply.status(200).send({ message: 'Password updated successfully' });
+    } catch (error) {
+      reply.status(400).send({ message: error });
     }
   }
 }

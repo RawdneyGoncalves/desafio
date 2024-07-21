@@ -1,24 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm';
-import { Theme } from '@entities/theme.entity';
+import { Knex } from 'knex';
 
-@Entity()
-export class Package {
-  @PrimaryGeneratedColumn()
-  id: number;
+export async function up(knex: Knex): Promise<void> {
+  await knex.schema.createTable('packages', (table) => {
+    table.increments('id').primary();
+    table.string('name').notNullable();
+    table.specificType('themes', 'text[]').notNullable();
+    table.string('version').notNullable();
+    table.timestamp('created_at').defaultTo(knex.fn.now());
+    table.timestamp('updated_at').defaultTo(knex.fn.now());
+  });
+}
 
-  @Column()
-  name: string;
-
-  @ManyToMany(() => Theme)
-  @JoinTable()
-  themes: Theme[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @Column()
-  version: string;
+export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTable('packages');
 }

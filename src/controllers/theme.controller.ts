@@ -1,13 +1,31 @@
-import { Request, Response } from 'express';
-import { ThemeService } from '@services/theme.service';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { ThemeService } from '../services/theme.service';
 
 export class ThemeController {
-  static async getAllThemes(req: Request, res: Response) {
+  static async create(req: FastifyRequest, reply: FastifyReply) {
     try {
-      const themes = await ThemeService.getAllThemes();
-      res.status(200).json(themes);
+      const theme = await ThemeService.create(req.body);
+      reply.status(201).send(theme);
     } catch (error) {
-      res.status(400).json({ message: error });
+      reply.status(400).send({ message: error.message });
+    }
+  }
+
+  static async getAll(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const themes = await ThemeService.getAll();
+      reply.status(200).send(themes);
+    } catch (error) {
+      reply.status(400).send({ message: error.message });
+    }
+  }
+
+  static async getById(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const theme = await ThemeService.getById(req.params.id);
+      reply.status(200).send(theme);
+    } catch (error) {
+      reply.status(404).send({ message: 'Theme not found' });
     }
   }
 }
